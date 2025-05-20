@@ -1,4 +1,3 @@
-
 """Compute Robust Rank Aggregation across multiple score tables."""
 
 import csv
@@ -6,10 +5,16 @@ from math import comb
 
 # files
 FILES = [
-    'artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_artery_1_UCell_positive_weighted_scores.csv',
-    'artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_artery_1_positive_weighted_scores.csv',
-    'artery_score/sceptre_artery_enrichment_stats_positive_weighted_scores.csv',
-    'artery_score/sceptre_artery_enrichment_vs_ntc_by_grna_id_stats_d8filter10_positive_weighted_scores.csv'
+    # artery score tables
+    "artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_artery_1_UCell_positive_weighted_scores.csv",
+    "artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_artery_1_positive_weighted_scores.csv",
+    "artery_score/sceptre_artery_enrichment_stats_positive_weighted_scores.csv",
+    "artery_score/sceptre_artery_enrichment_vs_ntc_by_grna_id_stats_d8filter10_positive_weighted_scores.csv",
+    # pre-artery score tables
+    "pre-artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_pre-artery_UCell_positive_weighted_scores.csv",
+    "pre-artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_pre.artery_positive_weighted_scores.csv",
+    "pre-artery_score/sceptre_preartery_enrichment_stats_positive_weighted_scores.csv",
+    "pre-artery_score/sceptre_stats_artery_pre-artery_enrichment_vs_non-targeting_by_grna_id_d8_minD8cells10_positive_weighted_scores.csv"
 ]
 
 # read each file and create ranking dictionary
@@ -36,14 +41,13 @@ for f in FILES:
     lengths.append(L)
 
 
-# union of genes across all lists
 
+# union of genes across all lists
 genes = set()
 for r in rankings:
     genes.update(r.keys())
 
 k = len(FILES)
-
 
 
 def beta_cdf(x: float, a: int, b: int) -> float:
@@ -67,8 +71,6 @@ for g in sorted(genes):
         rank = r.get(g, L + 1)
         norm_ranks.append(rank / (L + 1))
     norm_ranks.sort()
-
-    # order-specific p-values based on Beta distribution
     order_pvals = [beta_cdf(norm_ranks[j], j + 1, k - j) for j in range(k)]
     pvalue = min(order_pvals)
     score = norm_ranks[0]
