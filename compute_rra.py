@@ -1,4 +1,3 @@
-"""Compute Robust Rank Aggregation across multiple score tables."""
 
 import csv
 from math import comb
@@ -41,28 +40,13 @@ for f in FILES:
     lengths.append(L)
 
 
+# union of genes
 
-# union of genes across all lists
 genes = set()
 for r in rankings:
     genes.update(r.keys())
 
 k = len(FILES)
-
-
-def beta_cdf(x: float, a: int, b: int) -> float:
-    """Beta distribution CDF for integer parameters."""
-    if x <= 0:
-        return 0.0
-    if x >= 1:
-        return 1.0
-    n = a + b - 1
-    total = 0.0
-    for i in range(a, n + 1):
-        total += comb(n, i) * (x ** i) * ((1 - x) ** (n - i))
-    return total
-
-
 results = []
 
 for g in sorted(genes):
@@ -70,10 +54,8 @@ for g in sorted(genes):
     for r, L in zip(rankings, lengths):
         rank = r.get(g, L + 1)
         norm_ranks.append(rank / (L + 1))
-    norm_ranks.sort()
-    order_pvals = [beta_cdf(norm_ranks[j], j + 1, k - j) for j in range(k)]
-    pvalue = min(order_pvals)
-    score = norm_ranks[0]
+    score = min(norm_ranks)
+    pvalue = 1 - (1 - score) ** k
 
     results.append([g, score, pvalue])
 
@@ -91,7 +73,10 @@ for i, item in enumerate(results, start=1):
     item.append(fdr)
 
 # save csv
-with open('artery_score/rra_results.csv', 'w', newline='') as f:
+# write results to a new file to avoid overwriting previous analyses
+OUT_FILE = 'artery_score/rra_results_v2.csv'
+with open(OUT_FILE, 'w', newline='') as f:
+
     writer = csv.writer(f)
     writer.writerow(['gene', 'score', 'pvalue', 'fdr'])
     for row in results:
