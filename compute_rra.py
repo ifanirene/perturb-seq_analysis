@@ -1,3 +1,6 @@
+
+"""Compute Robust Rank Aggregation across multiple score tables."""
+
 import csv
 from math import comb
 
@@ -32,19 +35,31 @@ for f in FILES:
     rankings.append(r)
     lengths.append(L)
 
-# union of genes
+
+# union of genes across all lists
+
 genes = set()
 for r in rankings:
     genes.update(r.keys())
 
 k = len(FILES)
-results = []
-def beta_cdf(x, a, b):
+
+
+
+def beta_cdf(x: float, a: int, b: int) -> float:
+    """Beta distribution CDF for integer parameters."""
+    if x <= 0:
+        return 0.0
+    if x >= 1:
+        return 1.0
     n = a + b - 1
-    s = 0.0
-    for j in range(a):
-        s += comb(n, j) * (x ** j) * ((1 - x) ** (n - j))
-    return 1 - s
+    total = 0.0
+    for i in range(a, n + 1):
+        total += comb(n, i) * (x ** i) * ((1 - x) ** (n - i))
+    return total
+
+
+results = []
 
 for g in sorted(genes):
     norm_ranks = []
@@ -52,11 +67,12 @@ for g in sorted(genes):
         rank = r.get(g, L + 1)
         norm_ranks.append(rank / (L + 1))
     norm_ranks.sort()
-    pvals = []
-    for i, x in enumerate(norm_ranks, start=1):
-        pvals.append(beta_cdf(x, i, k - i + 1))
+
+    # order-specific p-values based on Beta distribution
+    order_pvals = [beta_cdf(norm_ranks[j], j + 1, k - j) for j in range(k)]
+    pvalue = min(order_pvals)
     score = norm_ranks[0]
-    pvalue = min(pvals)
+
     results.append([g, score, pvalue])
 
 # benjamini-hochberg FDR
