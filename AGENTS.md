@@ -135,3 +135,9 @@ Note all the tools are in python. So in the case you need to do batch processing
 
 
 # Scratchpad
+[x] Organize repository structure
+[x] Move data directories under `data/`
+[x] Move compute script to `tools/`
+[x] Relocate documentation files to `docs/`
+[x] Add environment.yml
+[x] Update README
