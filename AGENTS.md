@@ -141,5 +141,4 @@ Note all the tools are in python. So in the case you need to do batch processing
 [x] Relocate documentation files to `docs/`
 [x] Add environment.yml
 [x] Update README
-
-[ ] Move HTML from output to docs
+[x] Move HTML from output to docs
