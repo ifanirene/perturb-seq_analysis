@@ -1,6 +1,29 @@
 # perturb-seq_analysis
 Tools for analyzing perturb-seq data.
 
-The `compute_rra.py` script aggregates gene rankings from the four tables in the
-`artery_score` directory and generates an RRA results file. The latest analysis
-writes to `artery_score/rra_results_v2.csv` so previous results remain intact.
+## Repository structure
+
+```
+perturb-seq_analysis/
+├── data/                 # input score tables
+│   ├── artery_score/
+│   └── pre-artery_score/
+├── docs/                 # project background and notes
+├── output/               # generated figures and tables
+├── src/                  # source code modules
+│   ├── data_processing/
+│   ├── visualization/
+│   └── utils/
+├── tools/                # standalone scripts
+└── environment.yml       # conda environment specification
+```
+
+The `tools/compute_rra.py` script aggregates gene rankings from the CSV files in
+`data/artery_score` and `data/pre-artery_score`. It writes results to
+`data/artery_score/rra_results_v2.csv` so previous analyses remain intact.
+
+Run it from the repository root with:
+
+```bash
+python tools/compute_rra.py
+```
