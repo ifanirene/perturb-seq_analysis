@@ -1,19 +1,37 @@
 
+"""
+/**
+ * @description
+ * This script aggregates gene rankings from multiple CSV files to calculate
+ * robust rank aggregation (RRA) scores.
+ *
+ * Key features:
+ * - Reads weighted score tables for artery and pre-artery perturbations
+ * - Merges rankings and computes RRA p-values and FDR
+ * - Writes aggregated results to a CSV file
+ *
+ * @dependencies
+ * - Python standard library: csv
+ *
+ * @examples
+ * - python tools/compute_rra.py
+ */
+"""
+
 import csv
-from math import comb
 
 # files
 FILES = [
     # artery score tables
-    "artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_artery_1_UCell_positive_weighted_scores.csv",
-    "artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_artery_1_positive_weighted_scores.csv",
-    "artery_score/sceptre_artery_enrichment_stats_positive_weighted_scores.csv",
-    "artery_score/sceptre_artery_enrichment_vs_ntc_by_grna_id_stats_d8filter10_positive_weighted_scores.csv",
+    "data/artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_artery_1_UCell_positive_weighted_scores.csv",
+    "data/artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_artery_1_positive_weighted_scores.csv",
+    "data/artery_score/sceptre_artery_enrichment_stats_positive_weighted_scores.csv",
+    "data/artery_score/sceptre_artery_enrichment_vs_ntc_by_grna_id_stats_d8filter10_positive_weighted_scores.csv",
     # pre-artery score tables
-    "pre-artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_pre-artery_UCell_positive_weighted_scores.csv",
-    "pre-artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_pre.artery_positive_weighted_scores.csv",
-    "pre-artery_score/sceptre_preartery_enrichment_stats_positive_weighted_scores.csv",
-    "pre-artery_score/sceptre_stats_artery_pre-artery_enrichment_vs_non-targeting_by_grna_id_d8_minD8cells10_positive_weighted_scores.csv"
+    "data/pre-artery_score/discovery_FP_moi15_seq2_thresh10_Ucell30-celltype_pre-artery_UCell_positive_weighted_scores.csv",
+    "data/pre-artery_score/discovery_FP_moi15_seq2_tresh10_trajectory-celltype_cap4_pre.artery_positive_weighted_scores.csv",
+    "data/pre-artery_score/sceptre_preartery_enrichment_stats_positive_weighted_scores.csv",
+    "data/pre-artery_score/sceptre_stats_artery_pre-artery_enrichment_vs_non-targeting_by_grna_id_d8_minD8cells10_positive_weighted_scores.csv"
 ]
 
 # read each file and create ranking dictionary
@@ -74,7 +92,7 @@ for i, item in enumerate(results, start=1):
 
 # save csv
 # write results to a new file to avoid overwriting previous analyses
-OUT_FILE = 'artery_score/rra_results_v2.csv'
+OUT_FILE = 'data/artery_score/rra_results_v2.csv'
 with open(OUT_FILE, 'w', newline='') as f:
 
     writer = csv.writer(f)
