@@ -25,7 +25,6 @@ The `tools/compute_rra.py` script aggregates gene rankings from the CSV files in
 An interactive volcano plot produced from the analysis is available at
 `docs/interactive_perturbation_effect_volcano.html`.
 
-Run it from the repository root with:
 
 ```bash
 python tools/compute_rra.py
